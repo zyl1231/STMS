@@ -27,7 +27,7 @@
 		{
 			"binding": "DB",
 			"database_name": "stms-db",
-			"database_id": "",
+			"database_id": "9f7f01e7-ebf6-4f78-b633-65ae9db0fb03",
 			"remote": false
 		}
 	],
@@ -68,7 +68,7 @@
 				{
 					"binding": "DB",
 					"database_name": "stms-db",
-					"database_id": "",
+					"database_id": "9f7f01e7-ebf6-4f78-b633-65ae9db0fb03",
 					"remote": true
 				}
 			]
