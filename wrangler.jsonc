@@ -29,10 +29,16 @@
 			"database_name": "stms-db",
 			"database_id": "9f7f01e7-ebf6-4f78-b633-65ae9db0fb03",
 			"remote": false
+		},
+		{
+			"binding": "stms_db_production",
+			"database_name": "stms-db-production",
+			"database_id": "99cfe66d-2ea7-4668-85bd-197932e1d0f8"
 		}
 	],
 	// Cron Triggers for scheduled tasks
 	// https://developers.cloudflare.com/workers/configuration/cron-triggers/
+	// 当前配置：每5分钟执行一次
 	// 可根据需要调整频率，例如：
 	// - "* * * * *" - 每分钟
 	// - "*/10 * * * *" - 每10分钟
@@ -59,15 +65,15 @@
 	},
 	"env": {
 		"production": {
-			"name": "stms",
+			"name": "stms-production",
 			"vars": {
 				"ENVIRONMENT": "production"
 			},
 			"d1_databases": [
 				{
 					"binding": "DB",
-					"database_name": "stms-db",
-					"database_id": "9f7f01e7-ebf6-4f78-b633-65ae9db0fb03",
+					"database_name": "stms-db-production",
+					"database_id": "99cfe66d-2ea7-4668-85bd-197932e1d0f8",
 					"remote": true
 				}
 			]
