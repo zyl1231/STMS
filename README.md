@@ -48,16 +48,16 @@
    pnpm install
    ```
 
-2. **🔄 运行数据库迁移**
+2. **🔄 创建数据库并运行数据库迁移**
    ```bash
-   pnpx wrangler d1 migrations apply stms-db --local
+   pnpm run db:create
+   pnpm run db:migrate
    ```
 
 3. **配置环境变量**
    ```bash
    cp .dev.vars.example .dev.vars
    cp .env.example .env
-   # 编辑 .dev.vars 文件并填入实际配置值
    ```
 
 4. **启动开发服务器**
@@ -118,17 +118,8 @@ pnpm run test:coverage
 # 本地数据库迁移
 pnpm run db:migrate
 
-# 创建生产环境数据库
-pnpm run db:create:production
-
 # 生产环境数据库迁移
 pnpm run db:migrate:production
-
-# 创建预发布环境数据库
-pnpm run db:create:staging
-
-# 预发布环境数据库迁移
-pnpm run db:migrate:staging
 
 # 查看本地数据库表
 pnpm run db:console
@@ -140,15 +131,8 @@ pnpm run db:console:production
 ### 部署
 
 ```bash
-# 部署到生产环境
-pnpm run deploy:production
-
-# 部署到预发布环境
-pnpm run deploy:staging
-
-# 使用部署脚本（推荐）
+# 使用部署脚本
 ./scripts/deploy.sh production
-./scripts/deploy.sh staging
 ```
 
 ### 日志
@@ -156,9 +140,6 @@ pnpm run deploy:staging
 ```bash
 # 查看生产环境日志
 pnpm run logs:production
-
-# 查看预发布环境日志
-pnpm run logs:staging
 ```
 
 ### 密钥管理
@@ -168,11 +149,6 @@ pnpm run logs:staging
 wrangler secret put JWT_SECRET --env production
 wrangler secret put NOTIFYX_API_KEY --env production
 wrangler secret put EMAIL_API_KEY --env production
-
-# 设置预发布环境密钥
-wrangler secret put JWT_SECRET --env staging
-wrangler secret put NOTIFYX_API_KEY --env staging
-wrangler secret put EMAIL_API_KEY --env staging
 
 # 列出所有密钥
 wrangler secret list --env production
@@ -328,10 +304,7 @@ VITE_APP_TITLE=STMS Development
 
 ```bash
 # 创建生产环境数据库
-wrangler d1 create stms-db-production
-
-# 创建预发布环境数据库（可选）
-wrangler d1 create stms-db-staging
+wrangler d1 create stms-db
 ```
 
 记录返回的 `database_id`，并更新 `wrangler.jsonc` 中对应环境的配置。
@@ -340,10 +313,7 @@ wrangler d1 create stms-db-staging
 
 ```bash
 # 生产环境
-wrangler d1 migrations apply stms-db-production --env production
-
-# 预发布环境
-wrangler d1 migrations apply stms-db-staging --env staging
+pnpm run db:migrate:production
 ```
 
 #### 3. 配置环境密钥
@@ -355,11 +325,6 @@ wrangler d1 migrations apply stms-db-staging --env staging
 wrangler secret put JWT_SECRET --env production
 wrangler secret put NOTIFYX_API_KEY --env production
 wrangler secret put EMAIL_API_KEY --env production
-
-# 预发布环境
-wrangler secret put JWT_SECRET --env staging
-wrangler secret put NOTIFYX_API_KEY --env staging
-wrangler secret put EMAIL_API_KEY --env staging
 ```
 
 ### 手动部署
@@ -369,41 +334,7 @@ wrangler secret put EMAIL_API_KEY --env staging
 ```bash
 # 使用部署脚本
 ./scripts/deploy.sh production
-
-# 或直接使用 pnpm 命令
-pnpm run deploy:production
 ```
-
-#### 部署到预发布环境
-
-```bash
-# 使用部署脚本
-./scripts/deploy.sh staging
-
-# 或直接使用 wrangler
-pnpm run deploy:staging
-```
-
-### CI/CD 自动部署
-
-项目已配置 GitHub Actions 自动部署流程。
-
-#### 配置 GitHub Secrets
-
-在 GitHub 仓库设置中添加以下 Secrets：
-
-1. `CLOUDFLARE_API_TOKEN`：Cloudflare API Token
-   - 在 Cloudflare Dashboard > My Profile > API Tokens 创建
-   - 需要 "Edit Cloudflare Workers" 权限
-
-2. `CLOUDFLARE_ACCOUNT_ID`：Cloudflare Account ID
-   - 在 Cloudflare Dashboard > Workers & Pages 页面找到
-
-#### 自动部署触发条件
-
-- **推送到 `main` 分支**：自动部署到生产环境
-- **推送到 `staging` 分支**：自动部署到预发布环境
-- **Pull Request**：运行测试但不部署
 
 ### 部署验证
 

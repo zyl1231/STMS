@@ -25,7 +25,7 @@ export interface ExecutionRule {
   endDate: string; // 下一次执行日期
   // New fields for periodic reminders
   reminderAdvanceValue?: number;
-  reminderAdvanceUnit?: 'day' | 'hour';
+  reminderAdvanceUnit: 'day' | 'hour';
   autoRenew?: boolean;
 }
 
@@ -35,13 +35,12 @@ export interface KeepaliveConfig {
   headers?: Record<string, string>;
   body?: string;
   timeout: number;
-  executionRule?: ExecutionRule;
 }
 
 export interface NotificationConfig {
   message: string;
   title: string;
-  executionRule?: ExecutionRule;
+  executionRule: ExecutionRule;
 }
 
 export interface NotifyXConfig {

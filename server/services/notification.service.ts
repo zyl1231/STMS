@@ -26,20 +26,6 @@ export class NotificationService {
       const results: boolean[] = [];
       const errors: string[] = [];
 
-
-      // 检查通知时段 (Notification Time Window)
-      if (settings.allowed_time_slots) {
-        const now = new Date();
-        const currentHour = now.getHours();
-        // Skip check for 'test' or 'urgent' notifications, or implement priority logic
-        if (metadata?.type !== 'test') {
-          const allowedHours = settings.allowed_time_slots.split(/[,，\s]+/).map((h: string) => parseInt(h, 10)).filter((h: number) => !isNaN(h));
-          if (allowedHours.length > 0 && !allowedHours.includes(currentHour)) {
-            return { success: false, error: `当前时间(${currentHour}时)不在允许的通知时段内` };
-          }
-        }
-      }
-
       // 发送NotifyX通知
       if (settings.notifyx_enabled && settings.notifyx_api_key) {
         const notifyxResult = await this.sendNotifyXMessage({

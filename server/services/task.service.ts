@@ -1,7 +1,6 @@
 import { Environment, Task, KeepaliveConfig, NotificationConfig, ExecutionResult } from '../types/index.js';
 import { DatabaseUtils } from '../utils/database.js';
 import { TaskModel } from '../models/task.model.js';
-import { ExecutionLogModel } from '../models/execution-log.model.js';
 import { NotificationService } from './notification.service.js';
 import { LogService } from './log.service.js';
 
@@ -315,11 +314,6 @@ export class TaskService {
     const startTime = Date.now();
 
     try {
-      // 验证任务类型
-      if (task.type !== 'keepalive') {
-        throw new Error('任务类型不是保活任务');
-      }
-
       const config = task.config as KeepaliveConfig;
 
       // 设置请求选项
@@ -420,11 +414,6 @@ export class TaskService {
     const startTime = Date.now();
 
     try {
-      // 验证任务类型
-      if (task.type !== 'notification') {
-        throw new Error('任务类型不是通知任务');
-      }
-
       const config = task.config as NotificationConfig;
 
       const message = this.buildMessage(task);

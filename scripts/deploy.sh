@@ -2,7 +2,7 @@
 
 # 部署脚本
 # 用法: ./scripts/deploy.sh [environment]
-# environment: production, staging (默认: production)
+# environment: production  (默认: production)
 
 set -e
 
@@ -26,12 +26,9 @@ pnpm run build-only
 if [ "$ENVIRONMENT" = "production" ]; then
     echo "📦 部署到生产环境..."
     pnpx wrangler deploy --env production
-elif [ "$ENVIRONMENT" = "staging" ]; then
-    echo "📦 部署到预发布环境..."
-    pnpx wrangler deploy --env staging
 else
     echo "❌ 未知的环境: $ENVIRONMENT"
-    echo "支持的环境: production, staging"
+    echo "支持的环境: production"
     exit 1
 fi
 
