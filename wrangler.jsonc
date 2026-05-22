@@ -33,7 +33,6 @@
 	],
 	// Cron Triggers for scheduled tasks
 	// https://developers.cloudflare.com/workers/configuration/cron-triggers/
-	// 当前配置：每5分钟执行一次
 	// 可根据需要调整频率，例如：
 	// - "* * * * *" - 每分钟
 	// - "*/10 * * * *" - 每10分钟
@@ -60,7 +59,7 @@
 	},
 	"env": {
 		"production": {
-			"name": "stms-production",
+			"name": "stms",
 			"vars": {
 				"ENVIRONMENT": "production"
 			},

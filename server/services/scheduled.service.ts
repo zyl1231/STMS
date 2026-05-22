@@ -1,4 +1,4 @@
-import { Environment, Task } from '../types/index.js';
+import { Environment, Task, ExecutionRule, NotificationConfig } from '../types/index.js';
 import { TaskService } from './task.service.js';
 import { DatabaseUtils } from '../utils/database.js';
 
@@ -65,19 +65,18 @@ export class ScheduledService {
    * @returns 需要执行的任务列表
    */
   private static async filterTasksToExecute(env: Environment, tasks: Task[]): Promise<Task[]> {
-    const results = await Promise.all(tasks.map(async (task) => {
+    const results = await Promise.all(tasks.map(async (task: Task) => {
       // 只执行启用的任务
       if (!task.enabled) {
         return false;
       }
 
       // 检查是否有自定义执行规则
-      const config = task.config as any; // Temporary cast to access optional executionRule
-      if (config.executionRule) {
-        return await this.checkExecutionRule(env, config.executionRule, task);
-      }
       if (task.type === 'keepalive') {
         return this.checkCronSchedule(task.cronExpression);
+      } else {
+        const config = task.config as NotificationConfig;
+        return await this.checkExecutionRule(env, config.executionRule, task);
       }
       return false;
     }));
@@ -92,13 +91,13 @@ export class ScheduledService {
    * @param task 任务对象
    * @returns 是否需要执行
    */
-  private static async checkExecutionRule(env: Environment, rule: any, task: Task): Promise<boolean> {
+  private static async checkExecutionRule(env: Environment, rule: ExecutionRule, task: Task): Promise<boolean> {
     const now = new Date();
     // Use endDate as the target execution date (Next Due Date)
     const targetDate = new Date(rule.endDate);
 
     // Check if we are within the reminder advance window
-    if (rule.reminderAdvanceValue && rule.reminderAdvanceUnit) {
+    if (rule.reminderAdvanceValue || rule.reminderAdvanceValue == 0) {
       const advanceMs = this.getAdvanceMs(rule.reminderAdvanceValue, rule.reminderAdvanceUnit);
       const startTime = targetDate.getTime() - advanceMs;
 
@@ -106,7 +105,7 @@ export class ScheduledService {
         // Fetch notification settings to check allowed time slots
         const settingsResult = await DatabaseUtils.getNotificationSettingsByUserId(env, task.created_by);
 
-        if (settingsResult.success && settingsResult.data && settingsResult.data.allowed_time_slots) {
+        if (settingsResult.success && settingsResult.data?.allowed_time_slots) {
           const allowedSlots = settingsResult.data.allowed_time_slots.split(',').map(s => parseInt(s.trim(), 10));
           const currentHour = now.getHours();
           const currentMinute = now.getMinutes();
