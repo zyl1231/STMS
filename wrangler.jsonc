@@ -29,11 +29,6 @@
 			"database_name": "stms-db",
 			"database_id": "9f7f01e7-ebf6-4f78-b633-65ae9db0fb03",
 			"remote": false
-		},
-		{
-			"binding": "stms_db_production",
-			"database_name": "stms-db-production",
-			"database_id": "99cfe66d-2ea7-4668-85bd-197932e1d0f8"
 		}
 	],
 	// Cron Triggers for scheduled tasks
@@ -72,8 +67,8 @@
 			"d1_databases": [
 				{
 					"binding": "DB",
-					"database_name": "stms-db-production",
-					"database_id": "99cfe66d-2ea7-4668-85bd-197932e1d0f8",
+					"database_name": "stms-db",
+					"database_id": "9f7f01e7-ebf6-4f78-b633-65ae9db0fb03",
 					"remote": true
 				}
 			]
