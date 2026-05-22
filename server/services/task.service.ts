@@ -42,8 +42,10 @@ export class TaskService {
       });
 
       // Handle periodic task endDate initialization
-      if (task.config.executionRule) {
-        const rule = task.config.executionRule;
+      if (task.type == 'notification') {
+        const notificationConfig = task.config as NotificationConfig;
+
+        const rule = notificationConfig.executionRule;
         if (!rule.endDate) {
           const startDate = new Date(rule.startDate);
           let nextDate = new Date(startDate);
@@ -54,7 +56,8 @@ export class TaskService {
           } else if (rule.unit === 'year') {
             nextDate.setFullYear(nextDate.getFullYear() + rule.interval);
           }
-          task.config.executionRule.endDate = nextDate.toISOString();
+          notificationConfig.executionRule.endDate = nextDate.toISOString();
+          task.config = notificationConfig;
         }
       }
 
@@ -468,8 +471,11 @@ export class TaskService {
       };
 
       // Handle Auto Renew
-      if (task.config.executionRule?.autoRenew) {
-        this.handleAutoRenew(task, updateData);
+      if (task.type == 'notification') {
+        const notificationConfig = task.config as NotificationConfig;
+        if (notificationConfig.executionRule.autoRenew) {
+          this.handleAutoRenew(task, updateData);
+        }
       }
 
       await DatabaseUtils.updateTask(env, task.id, updateData);
@@ -566,7 +572,8 @@ export class TaskService {
    * 处理任务自动续期
    */
   private static handleAutoRenew(task: Task, updateData: Partial<Task>) {
-    const rule = task.config.executionRule!;
+    const notificationConfig = task.config as NotificationConfig;
+    const rule = notificationConfig.executionRule;
     // Calculate next execution date based on current endDate (which is the Next Due Date)
     const currentDueDate = new Date(rule.endDate);
     const interval = rule.interval;
