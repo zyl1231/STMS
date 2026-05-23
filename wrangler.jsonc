@@ -52,9 +52,9 @@
 	// 生产环境：使用 wrangler secret put 命令设置敏感信息
 	// 
 	// 设置生产环境密钥：
-	// wrangler secret put JWT_SECRET
-	// wrangler secret put NOTIFYX_API_KEY
-	// wrangler secret put EMAIL_API_KEY
+	 wrangler secret put JWT_SECRET
+	 wrangler secret put NOTIFYX_API_KEY
+	 wrangler secret put EMAIL_API_KEY
 	"vars": {
 		"ENVIRONMENT": "development"
 	},
