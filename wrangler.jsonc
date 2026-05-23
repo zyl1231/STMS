@@ -60,7 +60,7 @@
 	},
 	"env": {
 		"production": {
-			"name": "stms",
+			"name": "stms-production",
 			"vars": {
 				"ENVIRONMENT": "production"
 			},
