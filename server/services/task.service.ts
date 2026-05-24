@@ -322,9 +322,17 @@ export class TaskService {
       // 设置请求选项
       // 注意：config.timeout 的单位是秒，而 AbortSignal.timeout 期望毫秒
       const timeoutMs = config.timeout ? config.timeout * 1000 : 30000;
+      const headers = new Headers(config.headers || {});
+      if (!headers.has('user-agent')) {
+        headers.set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+      }
+      if (!headers.has('accept')) {
+        headers.set('Accept', '*/*');
+      }
+
       const requestOptions: RequestInit = {
         method: config.method,
-        headers: config.headers || {},
+        headers: headers,
         signal: AbortSignal.timeout(timeoutMs)
       };
 
@@ -471,11 +479,9 @@ export class TaskService {
       };
 
       // Handle Auto Renew
-      if (task.type == 'notification') {
-        const notificationConfig = task.config as NotificationConfig;
-        if (notificationConfig.executionRule.autoRenew) {
-          this.handleAutoRenew(task, updateData);
-        }
+      const notificationConfig = task.config as NotificationConfig;
+      if (notificationConfig.executionRule.autoRenew) {
+        this.handleAutoRenew(task, updateData);
       }
 
       await DatabaseUtils.updateTask(env, task.id, updateData);
