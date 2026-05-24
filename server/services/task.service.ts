@@ -479,11 +479,9 @@ export class TaskService {
       };
 
       // Handle Auto Renew
-      if (task.type == 'notification') {
-        const notificationConfig = task.config as NotificationConfig;
-        if (notificationConfig.executionRule.autoRenew) {
-          this.handleAutoRenew(task, updateData);
-        }
+      const notificationConfig = task.config as NotificationConfig;
+      if (notificationConfig.executionRule.autoRenew) {
+        this.handleAutoRenew(task, updateData);
       }
 
       await DatabaseUtils.updateTask(env, task.id, updateData);
