@@ -100,9 +100,9 @@ export class HealthRoutes {
       const anomalies = await this.detectAnomalies(env, metrics);
 
       // 如果有严重异常，触发通知
-      if (anomalies.length > 0) {
-        await this.notifyAnomalies(env, anomalies);
-      }
+      // if (anomalies.length > 0) {
+      //   await this.notifyAnomalies(env, anomalies);
+      // }
 
       const response: ApiResponse = {
         success: true,
